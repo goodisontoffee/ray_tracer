@@ -17,10 +17,10 @@ impl Hittable for Sphere {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let oc = r.origin() - self.center;
         let a = Vec3::dot(&r.direction(), &r.direction());
-        let b = 2.0 * Vec3::dot(&oc, &r.direction());
+        let b = Vec3::dot(&oc, &r.direction());
         let c = Vec3::dot(&oc, &oc) - self.radius * self.radius;
 
-        let discriminant = b * b - 4.0 * a * c;
+        let discriminant = b * b - a * c;
 
         if discriminant > 0.0 {
             let mut temp = (-b - discriminant.sqrt()) / a;

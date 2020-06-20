@@ -2,14 +2,26 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 pub struct HitRecord {
-    pub t: f32,
-    pub p: Vec3,
-    pub normal: Vec3,
+    t: f32,
+    p: Vec3,
+    normal: Vec3,
 }
 
 impl HitRecord {
     pub fn new(t: f32, p: Vec3, normal: Vec3) -> Self {
         HitRecord { t, p, normal }
+    }
+
+    pub fn t(&self) -> f32 {
+        self.t
+    }
+
+    pub fn p(&self) -> Vec3 {
+        self.p
+    }
+
+    pub fn normal(&self) -> Vec3 {
+        self.normal
     }
 }
 

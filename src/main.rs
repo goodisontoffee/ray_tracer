@@ -14,9 +14,9 @@ fn color(r: &Ray, world: &HittableList) -> Vec3 {
     match world.hit(&r, 0.0, std::f32::MAX) {
         Some(hit_record) => {
             0.5 * Vec3::new(
-                hit_record.normal.x() + 1.0,
-                hit_record.normal.y() + 1.0,
-                hit_record.normal.z() + 1.0,
+                hit_record.normal().x() + 1.0,
+                hit_record.normal().y() + 1.0,
+                hit_record.normal().z() + 1.0,
             )
         }
         None => {
@@ -48,8 +48,9 @@ fn main() {
         for i in 0..nx {
             let u = i as f32 / nx as f32;
             let v = j as f32 / ny as f32;
-
             let r = Ray::new(origin, lower_left_corner + horizontal * u + vertical * v);
+
+            let p = r.point_at_parameter(2.0);
             let col = color(&r, &world);
 
             let ir = (255.99 * col.r()) as i32;

@@ -19,7 +19,7 @@ impl Hittable for HittableList {
         for object in &self.list {
             match object.hit(r, t_min, closest_so_far) {
                 Some(hit_record) => {
-                    closest_so_far = hit_record.t;
+                    closest_so_far = hit_record.t();
                     result = Some(hit_record);
                 }
                 None => {}
