@@ -4,26 +4,26 @@ mod ray;
 mod sphere;
 mod vec3;
 
-use hittable::{HitRecord, Hittable};
+use hittable::Hittable;
 use hittable_list::HittableList;
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;
 
 fn color(r: &Ray, world: &HittableList) -> Vec3 {
-    let mut rec = HitRecord::default();
-
-    if world.hit(&r, 0.0, std::f32::MAX, &mut rec) {
-        return 0.5
-            * Vec3::new(
-                rec.normal.x() + 1.0,
-                rec.normal.y() + 1.0,
-                rec.normal.z() + 1.0,
-            );
-    } else {
-        let unit_direction = Vec3::unit_vector(&r.direction());
-        let t = 0.5 * (unit_direction.y() + 1.0);
-        Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t
+    match world.hit(&r, 0.0, std::f32::MAX) {
+        Some(hit_record) => {
+            0.5 * Vec3::new(
+                hit_record.normal.x() + 1.0,
+                hit_record.normal.y() + 1.0,
+                hit_record.normal.z() + 1.0,
+            )
+        }
+        None => {
+            let unit_direction = Vec3::unit_vector(&r.direction());
+            let t = 0.5 * (unit_direction.y() + 1.0);
+            Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t
+        }
     }
 }
 
