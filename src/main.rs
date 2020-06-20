@@ -32,9 +32,9 @@ fn main() {
 
             let b: f32 = 0.2;
 
-            let ir = (255.99 * col.x()) as i32;
-            let ig = (255.99 * col.y()) as i32;
-            let ib = (255.99 * col.z()) as i32;
+            let ir = (255.99 * col.r()) as i32;
+            let ig = (255.99 * col.g()) as i32;
+            let ib = (255.99 * col.b()) as i32;
 
             println!("{} {} {}", ir, ig, ib);
         }
