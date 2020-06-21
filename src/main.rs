@@ -17,10 +17,7 @@ fn color(r: &Ray, world: &HittableList) -> Vec3 {
     match world.hit(&r, 0.0, std::f32::MAX) {
         Some(hit_record) => {
             let target = hit_record.p() + hit_record.normal() + random_in_unit_sphere();
-            0.5 * color(
-                &ray::Ray::new(hit_record.p(), target - hit_record.p()),
-                &world,
-            )
+            0.5 * color(&Ray::new(hit_record.p(), target - hit_record.p()), &world)
         }
         None => {
             let unit_direction = Vec3::unit_vector(&r.direction());
@@ -62,7 +59,7 @@ fn main() {
 
     for j in (0..height).rev() {
         for i in 0..width {
-            let mut col = Vec3::new(0.0, 0.0, 0.0);
+            let mut col = Vec3::default();
             for _ in 0..number_of_samples {
                 let u = (i as f32 + rng.gen::<f32>()) / width as f32;
                 let v = (j as f32 + rng.gen::<f32>()) / height as f32;
@@ -71,7 +68,8 @@ fn main() {
                 col = col + color(&r, &world);
             }
 
-            let col = col / number_of_samples as f32;
+            col = col / number_of_samples as f32;
+            col = Vec3::new(col.r().sqrt(), col.g().sqrt(), col.b().sqrt());
 
             let ir = (255.99 * col.r()) as i32;
             let ig = (255.99 * col.g()) as i32;
