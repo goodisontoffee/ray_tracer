@@ -1,11 +1,14 @@
+mod camera;
 mod hittable;
 mod hittable_list;
 mod ray;
 mod sphere;
 mod vec3;
 
+use camera::Camera;
 use hittable::Hittable;
 use hittable_list::HittableList;
+use rand::prelude::*;
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;
@@ -28,30 +31,33 @@ fn color(r: &Ray, world: &HittableList) -> Vec3 {
 }
 
 fn main() {
-    let nx = 200;
-    let ny = 100;
+    let width = 200;
+    let height = 100;
+    let number_of_samples = 100;
     let max_value = 255;
-
-    let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
-    let horizontal = Vec3::new(4.0, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, 2.0, 0.0);
-    let origin = Vec3::new(0.0, 0.0, 0.0);
 
     let mut list: Vec<Box<dyn Hittable>> = Vec::new();
     list.push(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
     list.push(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
     let world = HittableList::new(list);
 
-    println!("P3\n{} {}\n{}", nx, ny, max_value);
+    let cam = Camera::new();
+    let mut rng = rand::thread_rng();
 
-    for j in (0..ny).rev() {
-        for i in 0..nx {
-            let u = i as f32 / nx as f32;
-            let v = j as f32 / ny as f32;
-            let r = Ray::new(origin, lower_left_corner + horizontal * u + vertical * v);
+    println!("P3\n{} {}\n{}", width, height, max_value);
 
-            let p = r.point_at_parameter(2.0);
-            let col = color(&r, &world);
+    for j in (0..height).rev() {
+        for i in 0..width {
+            let mut col = Vec3::new(0.0, 0.0, 0.0);
+            for _ in 0..number_of_samples {
+                let u = (i as f32 + rng.gen::<f32>()) / width as f32;
+                let v = (j as f32 + rng.gen::<f32>()) / height as f32;
+
+                let r = &cam.get_ray(u, v);
+                col = col + color(&r, &world);
+            }
+
+            let col = col / number_of_samples as f32;
 
             let ir = (255.99 * col.r()) as i32;
             let ig = (255.99 * col.g()) as i32;
