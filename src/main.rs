@@ -16,16 +16,30 @@ use vec3::Vec3;
 fn color(r: &Ray, world: &HittableList) -> Vec3 {
     match world.hit(&r, 0.0, std::f32::MAX) {
         Some(hit_record) => {
-            0.5 * Vec3::new(
-                hit_record.normal().x() + 1.0,
-                hit_record.normal().y() + 1.0,
-                hit_record.normal().z() + 1.0,
+            let target = hit_record.p() + hit_record.normal() + random_in_unit_sphere();
+            0.5 * color(
+                &ray::Ray::new(hit_record.p(), target - hit_record.p()),
+                &world,
             )
         }
         None => {
             let unit_direction = Vec3::unit_vector(&r.direction());
             let t = 0.5 * (unit_direction.y() + 1.0);
             Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t
+        }
+    }
+}
+
+fn random_in_unit_sphere() -> Vec3 {
+    let mut p: Vec3;
+    let mut rng = rand::thread_rng();
+
+    loop {
+        p = 2.0 * Vec3::new(rng.gen::<f32>(), rng.gen::<f32>(), rng.gen::<f32>())
+            - Vec3::new(1.0, 1.0, 1.0);
+
+        if p.squared_length() < 1.0 {
+            return p;
         }
     }
 }
