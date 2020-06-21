@@ -17,12 +17,9 @@ impl Hittable for HittableList {
         let mut closest_so_far = t_max;
 
         for object in &self.list {
-            match object.hit(r, t_min, closest_so_far) {
-                Some(hit_record) => {
-                    closest_so_far = hit_record.t();
-                    result = Some(hit_record);
-                }
-                None => {}
+            if let Some(hit_record) = object.hit(r, t_min, closest_so_far) {
+                closest_so_far = hit_record.t();
+                result = Some(hit_record);
             }
         }
 

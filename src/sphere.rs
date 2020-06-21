@@ -1,15 +1,21 @@
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 pub struct Sphere {
     center: Vec3,
     radius: f32,
+    material: Material,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32) -> Self {
-        Sphere { center, radius }
+    pub fn new(center: Vec3, radius: f32, material: Material) -> Self {
+        Sphere {
+            center,
+            radius,
+            material,
+        }
     }
 }
 
@@ -25,21 +31,21 @@ impl Hittable for Sphere {
         if discriminant > 0.0 {
             let mut temp = (-b - discriminant.sqrt()) / a;
             if temp < t_max && temp > t_min {
-                let hit_record = HitRecord::new(
+                return Some(HitRecord::new(
                     temp,
                     r.point_at_parameter(temp),
                     (r.point_at_parameter(temp) - self.center) / self.radius,
-                );
-                return Some(hit_record);
+                    self.material,
+                ));
             }
             temp = (-b + discriminant.sqrt()) / a;
             if temp < t_max && temp > t_min {
-                let hit_record = HitRecord::new(
+                return Some(HitRecord::new(
                     temp,
                     r.point_at_parameter(temp),
                     (r.point_at_parameter(temp) - self.center) / self.radius,
-                );
-                return Some(hit_record);
+                    self.material,
+                ));
             }
         }
 
