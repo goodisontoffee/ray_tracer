@@ -14,7 +14,7 @@ use sphere::Sphere;
 use vec3::Vec3;
 
 fn color(r: &Ray, world: &HittableList) -> Vec3 {
-    match world.hit(&r, 0.0, std::f32::MAX) {
+    match world.hit(&r, 0.001, std::f32::MAX) {
         Some(hit_record) => {
             let target = hit_record.p() + hit_record.normal() + random_in_unit_sphere();
             0.5 * color(&Ray::new(hit_record.p(), target - hit_record.p()), &world)
