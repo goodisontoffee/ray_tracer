@@ -10,7 +10,7 @@ impl Vec3 {
         Vec3 { e: [e0, e1, e2] }
     }
 
-    fn length(self) -> f32 {
+    pub fn length(self) -> f32 {
         (self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]).sqrt()
     }
 
@@ -135,6 +135,16 @@ impl ops::Div<f32> for Vec3 {
 
         Vec3 {
             e: [self.e[0] * k, self.e[1] * k, self.e[2] * k],
+        }
+    }
+}
+
+impl ops::Neg for Vec3 {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Vec3 {
+            e: [-self.e[0], -self.e[1], -self.e[2]],
         }
     }
 }
