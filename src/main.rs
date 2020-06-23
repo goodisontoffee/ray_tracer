@@ -84,7 +84,13 @@ fn main() {
     )));
     let world = HittableList::new(list);
 
-    let cam = Camera::new();
+    let cam = Camera::new(
+        Vec3::new(-2.0, 2.0, 1.0),
+        Vec3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        90.0,
+        width as f32 / height as f32,
+    );
     let mut rng = rand::thread_rng();
 
     println!("P3\n{} {}\n{}", width, height, max_value);
